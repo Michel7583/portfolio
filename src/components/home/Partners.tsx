@@ -22,10 +22,7 @@ export function Partners() {
         >
           Companies we work alongside
         </h2>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-muted sm:text-base">
-          Representative partnership marks for {site.name}. Replace these with
-          approved partner logos when they can be shared.
-        </p>
+        
       </div>
 
       <Carousel ariaLabel="Partnership companies" speed="slower">
