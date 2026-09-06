@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1584 396" width="1584" height="396" fill="none">
+  <defs>
+    <radialGradient id="pGlow" cx="78%" cy="42%" r="48%">
+      <stop offset="0%" stop-color="#7AA2FF" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#7AA2FF" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="pGrid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M44 0H0V44" fill="none" stroke="#EEF1F6" stroke-opacity="0.045" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1584" height="396" fill="#07090E"/>
+  <rect width="1584" height="396" fill="url(#pGrid)"/>
+  <rect width="1584" height="396" fill="url(#pGlow)"/>
+  <rect x="0" y="0" width="5" height="396" fill="#7AA2FF"/>
+
+  <!-- Leave the lower-left clear for the profile photo -->
+  <g transform="translate(1280 28) scale(8.6)" opacity="0.12">
+    <path
+      d="M21.8 7.2c-5.4-3.2-12.4-1-14.8 4.6-2.5 5.8.2 12.2 6 14.6 4.1 1.7 8.7.4 11.4-2.8"
+      stroke="#EEF1F6"
+      stroke-width="2.35"
+      stroke-linecap="round"
+    />
+    <path d="M10 5.6 22.2 26.6" stroke="#7AA2FF" stroke-width="2.15" stroke-linecap="round"/>
+    <circle cx="16.1" cy="16.1" r="2.2" fill="#C4A574"/>
+  </g>
+
+  <rect x="470" y="118" width="132" height="132" rx="34" fill="#0E1219"/>
+  <g transform="translate(484 132) scale(3.25)">
+    <path
+      d="M21.8 7.2c-5.4-3.2-12.4-1-14.8 4.6-2.5 5.8.2 12.2 6 14.6 4.1 1.7 8.7.4 11.4-2.8"
+      stroke="#EEF1F6"
+      stroke-width="2.35"
+      stroke-linecap="round"
+    />
+    <path d="M10 5.6 22.2 26.6" stroke="#7AA2FF" stroke-width="2.15" stroke-linecap="round"/>
+    <circle cx="16.1" cy="16.1" r="2.2" fill="#C4A574"/>
+  </g>
+
+  <text
+    x="628"
+    y="176"
+    fill="#EEF1F6"
+    font-family="Segoe UI, Helvetica Neue, Arial, sans-serif"
+    font-size="54"
+    font-weight="600"
+    letter-spacing="-1.2"
+  >Veylora</text>
+  <text
+    x="630"
+    y="216"
+    fill="#7AA2FF"
+    font-family="Segoe UI, Helvetica Neue, Arial, sans-serif"
+    font-size="16"
+    font-weight="600"
+    letter-spacing="3.2"
+  >AI x BLOCKCHAIN x FINTECH</text>
+  <text
+    x="630"
+    y="250"
+    fill="#8D95A8"
+    font-family="Segoe UI, Helvetica Neue, Arial, sans-serif"
+    font-size="18"
+    font-weight="400"
+  >Engineering the Future of Finance and Intelligent Software</text>
+</svg>
