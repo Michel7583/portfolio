@@ -127,7 +127,7 @@ export function Footer() {
                     Telegram
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     href={site.social.x}
                     className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-foreground"
@@ -140,7 +140,7 @@ export function Footer() {
                     />
                     X
                   </a>
-                </li>
+                </li> */}
                 <li>
                   <a
                     href={site.social.github}
