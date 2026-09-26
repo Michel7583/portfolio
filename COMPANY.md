@@ -12,7 +12,7 @@ We work with ambitious companies to turn complex ideas into software that can sh
 
 - Website: [veylora.network](https://veylora.network)
 - Email: [career@veylora.network](mailto:career@veylora.network)
-- Telegram: [t.me/VeyloraTechnology](https://t.me/VeyloraTechnology)
+- Telegram: [t.me/Veylora_official](https://t.me/Veylora_official)
 
 ## Who we are
 
@@ -96,5 +96,8 @@ We typically respond within 1 business day.
 
 - Start a project: [veylora.network/contact](https://veylora.network/contact)
 - Email: [career@veylora.network](mailto:career@veylora.network)
-- Telegram: [t.me/VeyloraTechnology](https://t.me/VeyloraTechnology)
+- LinkedIn: [linkedin.com/company/veylora-network](https://www.linkedin.com/company/veylora-network)
+- X: [x.com/VeyloraNetwork](https://x.com/VeyloraNetwork)
+- GitHub: [github.com/veylora-org](https://github.com/veylora-org)
+- Telegram: [t.me/Veylora_official](https://t.me/Veylora_official)
 - Location: International · Remote-first studio · Europe · Asia · Americas

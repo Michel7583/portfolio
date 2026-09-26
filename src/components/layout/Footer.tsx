@@ -180,7 +180,8 @@ export function Footer() {
 
         <div className="mt-14 flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {site.copyrightYear} {site.name}. All rights reserved.
+            © {site.copyrightFrom}–{site.copyrightYear} {site.name}. All
+            rights reserved.
           </p>
           <a
             href={`mailto:${site.email}`}

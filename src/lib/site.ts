@@ -14,6 +14,7 @@ export const site = {
     "To design and build production-ready software at the intersection of AI, blockchain, and financial infrastructure—so ambitious companies can turn complex ideas into systems that ship, operate, and scale.",
   vision:
     "A financial software landscape where intelligence is infrastructure: reliable, transparent, and accountable. The next generation of money products should be engineered with the same rigor as the institutions that depend on them.",
+  copyrightFrom: 2022,
   copyrightYear: 2026,
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://veylora.network",
   email: "career@veylora.network",
@@ -26,8 +27,8 @@ export const site = {
   social: {
     linkedin: "https://www.linkedin.com/company/veylora-network",
     github: "https://github.com/veylora-org",
-    x: "https://x.com/",
-    telegram: "https://t.me/veyloraorg",
+    x: "https://x.com/VeyloraNetwork",
+    telegram: "https://t.me/Veylora_official",
   },
 } as const;
 

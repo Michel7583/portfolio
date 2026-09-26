@@ -10,7 +10,7 @@ This repository is the public website for [Veylora](https://veylora.network): a 
 
 Company introduction: [COMPANY.md](COMPANY.md)
 
-[veylora.network](https://veylora.network) · [Start a project](https://veylora.network/contact) · [Telegram](https://t.me/VeyloraTechnology)
+[veylora.network](https://veylora.network) · [Start a project](https://veylora.network/contact) · [X](https://x.com/VeyloraNetwork) · [Telegram](https://t.me/Veylora_official)
 
 ## Mission
 
@@ -91,5 +91,5 @@ Brand name, email, location, mission, vision, and social links live in [`src/lib
 ## Contact
 
 - Email: [career@veylora.network](mailto:career@veylora.network)
-- Telegram: [t.me/VeyloraTechnology](https://t.me/VeyloraTechnology)
+- Telegram: [t.me/Veylora_official](https://t.me/Veylora_official)
 - Location: International · Remote-first · Europe · Asia · Americas
