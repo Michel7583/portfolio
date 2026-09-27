@@ -1,11 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { partners } from "@/lib/data/partners";
-import { site } from "@/lib/site";
 import { Carousel } from "@/components/ui/Carousel";
 import { PartnerLogo } from "@/components/visual/partner-logos";
 
 export function Partners() {
+  const t = useTranslations("Home");
+
   return (
     <section
       id="partners"
@@ -14,18 +16,20 @@ export function Partners() {
     >
       <div className="mx-auto mb-8 w-full max-w-6xl px-5 sm:mb-10 sm:px-6 lg:px-8">
         <p className="text-[13px] font-medium uppercase tracking-[0.22em] text-accent">
-          Partnerships
+          {t("partnersTitle")}
         </p>
         <h2
           id="partners-heading"
           className="mt-3 max-w-2xl text-balance text-2xl font-semibold tracking-[-0.04em] sm:text-3xl lg:text-[2.15rem] lg:leading-[1.2]"
         >
-          Companies we work alongside
+          {t("partnersTitle")}
         </h2>
-        
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-muted">
+          {t("partnersDesc")}
+        </p>
       </div>
 
-      <Carousel ariaLabel="Partnership companies" speed="slower">
+      <Carousel ariaLabel={t("partnersTitle")} speed="slower">
         {partners.map((partner) => (
           <div
             key={partner.name}

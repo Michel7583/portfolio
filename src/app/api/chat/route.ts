@@ -3,9 +3,10 @@ import OpenAI from "openai";
 import {
   CHAT_MAX_CHARS,
   CHAT_MAX_MESSAGES,
-  chatSystemPrompt,
+  buildChatSystemPrompt,
   type ChatMessage,
 } from "@/lib/chat";
+import { locales } from "@/i18n/routing";
 
 function isChatMessage(value: unknown): value is ChatMessage {
   if (!value || typeof value !== "object") return false;
@@ -85,10 +86,16 @@ export async function POST(request: Request) {
     );
   }
 
-  const incoming =
+  const incomingBody =
     body && typeof body === "object"
-      ? (body as { messages?: unknown }).messages
+      ? (body as { messages?: unknown; locale?: unknown })
       : null;
+  const incoming = incomingBody?.messages ?? null;
+  const locale =
+    typeof incomingBody?.locale === "string" &&
+    (locales as readonly string[]).includes(incomingBody.locale)
+      ? incomingBody.locale
+      : "en";
   const messages = sanitizeMessages(incoming);
 
   if (!messages) {
@@ -103,7 +110,7 @@ export async function POST(request: Request) {
     temperature: 0.4,
     max_tokens: 500,
     messages: [
-      { role: "system" as const, content: chatSystemPrompt },
+      { role: "system" as const, content: buildChatSystemPrompt(locale) },
       ...messages,
     ],
   };

@@ -70,11 +70,11 @@ The assistant uses Groq when `GROQ_API_KEY` is set. Otherwise it uses OpenAI.
 
 Brand name, email, location, mission, vision, and social links live in [`src/lib/site.ts`](src/lib/site.ts). Change that file to update the site-wide company profile.
 
-## Routes
+## Locales
 
-| Path | Page |
-| --- | --- |
-| `/` | Homepage |
+The site supports: English (`en`), Simplified Chinese (`zh`), Japanese (`ja`), Spanish (`es`), French (`fr`), German (`de`), and Portuguese (`pt`).
+
+URLs are locale-prefixed (`/en`, `/zh/about`, …). `/` redirects to `/en`. Copy lives in `messages/*.json`. Use the language switcher in the navbar to change locale.
 | `/services` | Services overview |
 | `/services/ai-ml` | AI / ML |
 | `/services/blockchain-web3` | Blockchain / Web3 |

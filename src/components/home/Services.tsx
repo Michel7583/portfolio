@@ -1,4 +1,5 @@
 import { Brain, Landmark, Link2 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { services } from "@/lib/data/services";
 import { Card } from "@/components/ui/Card";
 import { Reveal } from "@/components/ui/Reveal";
@@ -12,12 +13,16 @@ const icons = {
   fintech: Landmark,
 } as const;
 
-export function Services() {
+export async function Services() {
+  const t = await getTranslations("Service");
+  const th = await getTranslations("Home");
+  const tc = await getTranslations("Common");
+
   return (
     <Section
       id="services"
-      title="Technology built around your business"
-      description="Three practices. One engineering standard. We build the systems underneath ambitious financial and intelligence products."
+      title={th("servicesTitle")}
+      description={th("servicesDesc")}
     >
       <div className="grid gap-5 lg:grid-cols-3">
         {services.map((service, index) => {
@@ -27,7 +32,7 @@ export function Services() {
               <Card as="article" className="group flex h-full flex-col overflow-hidden">
                 <CoverImage
                   src={service.image}
-                  alt={service.imageAlt}
+                  alt={t(`${service.slug}.imageAlt`)}
                   className="aspect-[16/10]"
                   sizes="(min-width: 1024px) 30vw, 100vw"
                 />
@@ -36,10 +41,10 @@ export function Services() {
                     <Icon className="h-4 w-4" aria-hidden />
                   </div>
                   <h3 className="text-2xl font-semibold tracking-[-0.03em]">
-                    {service.title}
+                    {t(`${service.slug}.title`)}
                   </h3>
                   <p className="mt-3 text-sm leading-7 text-muted">
-                    {service.cardDescription}
+                    {t(`${service.slug}.cardDescription`)}
                   </p>
                   <ul className="mt-6 space-y-2">
                     {service.cardCapabilities.map((item) => (
@@ -53,7 +58,7 @@ export function Services() {
                     ))}
                   </ul>
                   <TextLink href={service.href} className="mt-8">
-                    {service.cta}
+                    {tc("explore")}
                   </TextLink>
                 </div>
               </Card>

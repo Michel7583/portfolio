@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { TextLink } from "@/components/ui/TextLink";
@@ -11,10 +14,15 @@ export function CaseStudyCard({
   study: CaseStudy;
   heading?: "h2" | "h3";
 }) {
+  const t = useTranslations("CaseStudy");
+  const tc = useTranslations("Common");
+  const title = t(`${study.slug}.title`);
+  const challenge = t(`${study.slug}.challenge`);
+
   return (
     <Card as="article" className="flex h-full flex-col overflow-hidden">
       <CaseStudyVisual
-        title={study.title}
+        title={title}
         image={study.image}
         imageAlt={study.imageAlt}
         flush
@@ -25,10 +33,10 @@ export function CaseStudyCard({
           <span className="text-xs text-muted">{study.project}</span>
         </div>
         <Heading className="mt-4 text-xl font-semibold tracking-[-0.03em] sm:text-[1.35rem]">
-          {study.title}
+          {title}
         </Heading>
         <p className="mt-3 flex-1 text-[15px] leading-7 text-muted">
-          {study.challenge}
+          {challenge}
         </p>
         <ul className="mt-5 flex flex-wrap gap-2">
           {study.technology.slice(0, 4).map((item) => (
@@ -41,7 +49,7 @@ export function CaseStudyCard({
           ))}
         </ul>
         <TextLink href={`/case-studies/${study.slug}`} className="mt-6">
-          Read case study
+          {tc("learnMore")}
         </TextLink>
       </div>
     </Card>

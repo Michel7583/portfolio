@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
   budgetRanges,
@@ -7,7 +8,6 @@ import {
   timelines,
   type ContactPayload,
 } from "@/lib/data/contact";
-import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 
@@ -30,22 +30,10 @@ function isEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-function validate(form: ContactPayload): FieldErrors {
-  const errors: FieldErrors = {};
-  if (form.name.trim().length < 2) errors.name = "Enter your name.";
-  if (form.email.trim() && !isEmail(form.email)) {
-    errors.email = "Enter a valid email address.";
-  } else if (!form.email.trim()) {
-    errors.email = "Email is required.";
-  }
-  if (!form.projectType) errors.projectType = "Select a project type.";
-  if (form.description.trim().length < 20) {
-    errors.description = "Describe the product or problem in a few sentences.";
-  }
-  return errors;
-}
-
 export function ContactForm() {
+  const t = useTranslations("Form");
+  const ts = useTranslations("Site");
+  const tc = useTranslations("Common");
   const [form, setForm] = useState<ContactPayload>(initial);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [touched, setTouched] = useState<Partial<Record<keyof ContactPayload, boolean>>>(
@@ -55,6 +43,43 @@ export function ContactForm() {
     "idle",
   );
   const [message, setMessage] = useState("");
+
+  const projectTypeLabels = [
+    t("typeAi"),
+    t("typeBlockchain"),
+    t("typeFintech"),
+    t("typeSaas"),
+    t("typeOther"),
+  ];
+  const budgetLabels = [
+    t("budget1"),
+    t("budget2"),
+    t("budget3"),
+    t("budget4"),
+    t("budget5"),
+  ];
+  const timelineLabels = [
+    t("timeline1"),
+    t("timeline2"),
+    t("timeline3"),
+    t("timeline4"),
+    t("timeline5"),
+  ];
+
+  function validate(current: ContactPayload): FieldErrors {
+    const next: FieldErrors = {};
+    if (current.name.trim().length < 2) next.name = t("errorName");
+    if (current.email.trim() && !isEmail(current.email)) {
+      next.email = t("errorEmailInvalid");
+    } else if (!current.email.trim()) {
+      next.email = t("errorEmailRequired");
+    }
+    if (!current.projectType) next.projectType = t("errorProjectType");
+    if (current.description.trim().length < 20) {
+      next.description = t("errorDescription");
+    }
+    return next;
+  }
 
   function update<K extends keyof ContactPayload>(key: K, value: ContactPayload[K]) {
     setForm((current) => {
@@ -84,7 +109,7 @@ export function ContactForm() {
 
     if (Object.keys(nextErrors).length > 0) {
       setStatus("error");
-      setMessage("Please correct the highlighted fields.");
+      setMessage(t("errorCorrect"));
       return;
     }
 
@@ -100,22 +125,18 @@ export function ContactForm() {
       const data = (await response.json()) as { ok?: boolean; error?: string };
 
       if (!response.ok || !data.ok) {
-        throw new Error(data.error ?? "Unable to send your inquiry. Try again.");
+        throw new Error(data.error ?? t("errorSend"));
       }
 
       setStatus("success");
-      setMessage(
-        "Thanks. We've received your project inquiry. We'll get back to you shortly.",
-      );
+      setMessage(t("successBody"));
       setForm(initial);
       setTouched({});
       setErrors({});
     } catch (error) {
       setStatus("error");
       setMessage(
-        error instanceof Error
-          ? error.message
-          : "Network error. Check your connection and try again.",
+        error instanceof Error ? error.message : t("errorNetwork"),
       );
     }
   }
@@ -127,7 +148,7 @@ export function ContactForm() {
         className="rounded-2xl border border-accent/30 bg-accent-soft px-6 py-8"
       >
         <h2 className="text-xl font-semibold tracking-[-0.03em]">
-          Inquiry received
+          {t("successTitle")}
         </h2>
         <p className="mt-3 text-sm leading-7 text-foreground/85">{message}</p>
       </div>
@@ -138,9 +159,10 @@ export function ContactForm() {
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
       <div className="grid gap-5 sm:grid-cols-2">
         <Field
-          label="Name"
+          label={t("name")}
           htmlFor="name"
           required
+          requiredLabel={tc("required")}
           error={touched.name ? errors.name : undefined}
         >
           <input
@@ -148,7 +170,7 @@ export function ContactForm() {
             name="name"
             required
             autoComplete="name"
-            placeholder="Your name"
+            placeholder={t("namePlaceholder")}
             aria-invalid={Boolean(touched.name && errors.name)}
             aria-describedby={touched.name && errors.name ? "name-error" : undefined}
             className={cn(fieldClass, touched.name && errors.name ? "border-red-400/40" : "border-border")}
@@ -157,12 +179,12 @@ export function ContactForm() {
             onChange={(event) => update("name", event.target.value)}
           />
         </Field>
-        <Field label="Company" htmlFor="company">
+        <Field label={t("company")} htmlFor="company" requiredLabel={tc("required")}>
           <input
             id="company"
             name="company"
             autoComplete="organization"
-            placeholder="Company name"
+            placeholder={t("companyPlaceholder")}
             className={cn(fieldClass, "border-border")}
             value={form.company}
             onChange={(event) => update("company", event.target.value)}
@@ -171,9 +193,10 @@ export function ContactForm() {
       </div>
 
       <Field
-        label="Email"
+        label={t("email")}
         htmlFor="email"
         required
+        requiredLabel={tc("required")}
         error={touched.email ? errors.email : undefined}
       >
         <input
@@ -182,7 +205,7 @@ export function ContactForm() {
           type="email"
           required
           autoComplete="email"
-          placeholder="you@company.com"
+          placeholder={t("emailPlaceholder")}
           aria-invalid={Boolean(touched.email && errors.email)}
           aria-describedby={touched.email && errors.email ? "email-error" : undefined}
           className={cn(fieldClass, touched.email && errors.email ? "border-red-400/40" : "border-border")}
@@ -194,9 +217,10 @@ export function ContactForm() {
 
       <div className="grid gap-5 sm:grid-cols-3">
         <Field
-          label="Project Type"
+          label={t("projectType")}
           htmlFor="projectType"
           required
+          requiredLabel={tc("required")}
           error={touched.projectType ? errors.projectType : undefined}
         >
           <select
@@ -219,16 +243,16 @@ export function ContactForm() {
             }
           >
             <option value="" disabled>
-              Select type
+              {t("selectType")}
             </option>
-            {projectTypes.map((type) => (
+            {projectTypes.map((type, index) => (
               <option key={type} value={type} className="bg-surface text-foreground">
-                {type}
+                {projectTypeLabels[index]}
               </option>
             ))}
           </select>
         </Field>
-        <Field label="Budget" htmlFor="budget">
+        <Field label={t("budget")} htmlFor="budget" requiredLabel={tc("required")}>
           <select
             id="budget"
             name="budget"
@@ -238,15 +262,15 @@ export function ContactForm() {
               update("budget", event.target.value as ContactPayload["budget"])
             }
           >
-            <option value="">Select budget</option>
-            {budgetRanges.map((range) => (
+            <option value="">{t("selectBudget")}</option>
+            {budgetRanges.map((range, index) => (
               <option key={range} value={range} className="bg-surface text-foreground">
-                {range}
+                {budgetLabels[index]}
               </option>
             ))}
           </select>
         </Field>
-        <Field label="Timeline" htmlFor="timeline">
+        <Field label={t("timeline")} htmlFor="timeline" requiredLabel={tc("required")}>
           <select
             id="timeline"
             name="timeline"
@@ -256,10 +280,10 @@ export function ContactForm() {
               update("timeline", event.target.value as ContactPayload["timeline"])
             }
           >
-            <option value="">Select timeline</option>
-            {timelines.map((item) => (
+            <option value="">{t("selectTimeline")}</option>
+            {timelines.map((item, index) => (
               <option key={item} value={item} className="bg-surface text-foreground">
-                {item}
+                {timelineLabels[index]}
               </option>
             ))}
           </select>
@@ -267,9 +291,10 @@ export function ContactForm() {
       </div>
 
       <Field
-        label="Project Description"
+        label={t("description")}
         htmlFor="description"
         required
+        requiredLabel={tc("required")}
         error={touched.description ? errors.description : undefined}
       >
         <textarea
@@ -277,7 +302,7 @@ export function ContactForm() {
           name="description"
           required
           rows={6}
-          placeholder="What are you building, who is it for, and what does success look like?"
+          placeholder={t("descriptionPlaceholder")}
           aria-invalid={Boolean(touched.description && errors.description)}
           aria-describedby={
             touched.description && errors.description ? "description-error" : undefined
@@ -294,9 +319,9 @@ export function ContactForm() {
       </Field>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-muted">{site.responseTime}</p>
+        <p className="text-sm text-muted">{ts("responseTime")}</p>
         <Button type="submit" disabled={status === "submitting"} size="lg">
-          {status === "submitting" ? "Sending…" : "Send Project Inquiry"}
+          {status === "submitting" ? t("sending") : t("submit")}
         </Button>
       </div>
 
@@ -317,12 +342,14 @@ function Field({
   htmlFor,
   children,
   required,
+  requiredLabel,
   error,
 }: {
   label: string;
   htmlFor: string;
   children: React.ReactNode;
   required?: boolean;
+  requiredLabel: string;
   error?: string;
 }) {
   const errorId = `${htmlFor}-error`;
@@ -337,7 +364,7 @@ function Field({
               *
             </span>
           ) : null}
-          {required ? <span className="sr-only"> required</span> : null}
+          {required ? <span className="sr-only"> {requiredLabel}</span> : null}
         </span>
         {children}
       </label>

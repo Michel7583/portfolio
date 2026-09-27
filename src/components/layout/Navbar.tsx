@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useEffect, useId, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { primaryNav } from "@/lib/data/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
+import { getPrimaryNav } from "@/lib/i18n/nav";
 import { useHydratedReducedMotion } from "@/lib/use-hydrated-reduced-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/layout/Logo";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export function Navbar() {
@@ -19,6 +20,9 @@ export function Navbar() {
 
 function NavbarInner() {
   const pathname = usePathname();
+  const t = useTranslations("Nav");
+  const tc = useTranslations("Common");
+  const primaryNav = useMemo(() => getPrimaryNav((key) => t(key)), [t]);
   const reduceMotion = useHydratedReducedMotion();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -61,11 +65,11 @@ function NavbarInner() {
       )}
     >
       <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between px-5 sm:px-6 lg:px-8">
-        <Logo />
+        <Logo onNavigate={() => setOpen(false)} />
 
         <nav
           className="hidden items-center gap-1 lg:flex"
-          aria-label="Primary"
+          aria-label={t("primary")}
         >
           {primaryNav.map((item) =>
             item.children ? (
@@ -142,24 +146,26 @@ function NavbarInner() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          <LanguageSwitcher />
           <ThemeToggle />
           <Button href="/contact" size="sm">
-            Start a Project
+            {tc("startProject")}
           </Button>
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSwitcher />
           <ThemeToggle />
-        <button
-          type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-foreground"
-          aria-expanded={open}
-          aria-controls={menuId}
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((value) => !value)}
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-foreground"
+            aria-expanded={open}
+            aria-controls={menuId}
+            aria-label={open ? t("closeMenu") : t("openMenu")}
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
 
@@ -167,7 +173,7 @@ function NavbarInner() {
         {open ? (
           <motion.nav
             id={menuId}
-            aria-label="Mobile"
+            aria-label={t("mobile")}
             initial={reduceMotion ? false : { opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={reduceMotion ? undefined : { opacity: 0, height: 0 }}
@@ -202,7 +208,7 @@ function NavbarInner() {
               ))}
               <div className="pt-4">
                 <Button href="/contact" className="w-full" size="lg">
-                  Start a Project
+                  {tc("startProject")}
                 </Button>
               </div>
             </div>

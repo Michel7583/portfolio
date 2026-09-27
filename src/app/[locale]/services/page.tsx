@@ -1,6 +1,8 @@
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { services } from "@/lib/data/services";
-import { createMetadata } from "@/lib/seo";
+import { createLocalizedMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { routing } from "@/i18n/routing";
 import { Cta } from "@/components/home/Cta";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -10,19 +12,36 @@ import { Section } from "@/components/ui/Section";
 import { PageHero } from "@/components/pages/PageHero";
 import { CoverImage } from "@/components/visual/CoverImage";
 
-export const metadata = createMetadata({
-  title: `Services | ${site.name}`,
-  description: `${site.name} designs and builds production software across AI/ML, blockchain, Web3, and fintech.`,
-  path: "/services",
-});
+type Props = { params: Promise<{ locale: string }> };
 
-export default function ServicesPage() {
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  return createLocalizedMetadata({
+    locale,
+    title: t("servicesTitle", { name: site.name }),
+    description: t("servicesDescription", { name: site.name }),
+    path: "/services",
+  });
+}
+
+export default async function ServicesPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("ServicesPage");
+  const ts = await getTranslations("Service");
+  const tc = await getTranslations("Common");
+
   return (
     <>
       <PageHero
-        eyebrow="Services"
-        title="Engineering for products that have to work"
-        description="We are an engineering partner for companies building at the intersection of intelligence, financial infrastructure, and trust. Each practice is staffed to ship production systems—not slideware."
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        description={t("description")}
         image="/images/hero-atmosphere.png"
         imageAlt=""
       />
@@ -35,13 +54,13 @@ export default function ServicesPage() {
                 <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
                   <div className="p-6 sm:p-8">
                     <p className="text-[12px] uppercase tracking-[0.18em] text-accent">
-                      {service.eyebrow}
+                      {ts(`${service.slug}.eyebrow`)}
                     </p>
                     <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">
-                      {service.title}
+                      {ts(`${service.slug}.title`)}
                     </h2>
                     <p className="mt-4 max-w-xl text-sm leading-7 text-muted sm:text-base">
-                      {service.description}
+                      {ts(`${service.slug}.description`)}
                     </p>
                     <div className="mt-5 flex flex-wrap gap-2">
                       {service.capabilities.map((item) => (
@@ -49,12 +68,14 @@ export default function ServicesPage() {
                       ))}
                     </div>
                     <div className="mt-6">
-                      <Button href={service.href}>Explore {service.title}</Button>
+                      <Button href={service.href}>
+                        {tc("explore")} {ts(`${service.slug}.title`)}
+                      </Button>
                     </div>
                   </div>
                   <CoverImage
                     src={service.image}
-                    alt={service.imageAlt}
+                    alt={ts(`${service.slug}.imageAlt`)}
                     className="min-h-56 lg:min-h-full"
                     sizes="(min-width: 1024px) 40vw, 100vw"
                   />

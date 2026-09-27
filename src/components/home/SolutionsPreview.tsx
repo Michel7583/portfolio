@@ -1,15 +1,19 @@
+import { getTranslations } from "next-intl/server";
 import { solutions } from "@/lib/data/solutions";
 import { Card } from "@/components/ui/Card";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { TextLink } from "@/components/ui/TextLink";
 
-export function SolutionsPreview() {
+export async function SolutionsPreview() {
+  const t = await getTranslations("Home");
+  const tc = await getTranslations("Common");
+
   return (
     <Section
       className="bg-panel"
-      title="What we can build"
-      description="Product systems we engineer. Each one is a starting architecture—not a template."
+      title={t("solutionsTitle")}
+      description={t("solutionsDesc")}
     >
       <div className="grid gap-4 md:grid-cols-2">
         {solutions.map((solution, index) => (
@@ -27,7 +31,7 @@ export function SolutionsPreview() {
                 {solution.summary}
               </p>
               <TextLink href={`/solutions#${solution.slug}`} className="mt-5">
-                Learn More
+                {tc("learnMore")}
               </TextLink>
             </Card>
           </Reveal>

@@ -1,21 +1,37 @@
+import { getTranslations } from "next-intl/server";
 import { techCategories } from "@/lib/data/technology";
 import { Card } from "@/components/ui/Card";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 
-export function Technology() {
+const titleKeys = [
+  "frontend",
+  "backend",
+  "data",
+  "cloud",
+  "ai",
+  "blockchain",
+  "fintech",
+  "security",
+  "product",
+] as const;
+
+export async function Technology() {
+  const t = await getTranslations("Technology");
+  const th = await getTranslations("Home");
+
   return (
     <Section
       className="bg-panel"
-      title="The technology ecosystem"
-      description="The stack we use to ship durable products across AI, blockchain, and financial systems. Tools are chosen for the problem, then held to the same engineering standard."
+      title={th("technologyTitle")}
+      description={th("technologyDesc")}
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {techCategories.map((category, index) => (
           <Reveal key={category.title} delay={index * 0.05} className="h-full min-w-0">
             <Card className="group h-full p-6">
               <h3 className="text-sm font-medium uppercase tracking-[0.16em] text-accent">
-                {category.title}
+                {t(titleKeys[index] ?? "product")}
               </h3>
               <ul className="mt-4 space-y-2.5">
                 {category.items.map((item) => (

@@ -1,28 +1,31 @@
 import { Eye, Target } from "lucide-react";
-import { site } from "@/lib/site";
+import { getTranslations } from "next-intl/server";
 import { Card } from "@/components/ui/Card";
 import { Reveal } from "@/components/ui/Reveal";
-
-const items = [
-  {
-    eyebrow: "Mission",
-    title: "What we exist to do",
-    body: site.mission,
-    icon: Target,
-  },
-  {
-    eyebrow: "Vision",
-    title: "Where we are going",
-    body: site.vision,
-    icon: Eye,
-  },
-] as const;
 
 type MissionVisionProps = {
   compact?: boolean;
 };
 
-export function MissionVision({ compact = false }: MissionVisionProps) {
+export async function MissionVision({ compact = false }: MissionVisionProps) {
+  const t = await getTranslations("MissionVision");
+  const ts = await getTranslations("Site");
+
+  const items = [
+    {
+      eyebrow: t("missionEyebrow"),
+      title: t("missionTitle"),
+      body: ts("mission"),
+      icon: Target,
+    },
+    {
+      eyebrow: t("visionEyebrow"),
+      title: t("visionTitle"),
+      body: ts("vision"),
+      icon: Eye,
+    },
+  ] as const;
+
   return (
     <div className="grid items-stretch gap-4 md:grid-cols-2">
       {items.map((item, index) => {

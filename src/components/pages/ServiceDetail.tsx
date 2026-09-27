@@ -1,5 +1,5 @@
+import { getTranslations } from "next-intl/server";
 import { getCaseStudy } from "@/lib/data/case-studies";
-import { processSteps } from "@/lib/data/process";
 import type { Service } from "@/lib/data/services";
 import { Cta } from "@/components/home/Cta";
 import { Badge } from "@/components/ui/Badge";
@@ -12,25 +12,37 @@ import { PageHero } from "@/components/pages/PageHero";
 import { CoverImage } from "@/components/visual/CoverImage";
 import { FintechMocks } from "@/components/visual/fintech-mocks";
 
-export function ServiceDetail({ service }: { service: Service }) {
+const processKeys = [
+  { number: "01", title: "discover", desc: "discoverDesc" },
+  { number: "02", title: "design", desc: "designDesc" },
+  { number: "03", title: "build", desc: "buildDesc" },
+  { number: "04", title: "validate", desc: "validateDesc" },
+  { number: "05", title: "launch", desc: "launchDesc" },
+  { number: "06", title: "scale", desc: "scaleDesc" },
+] as const;
+
+export async function ServiceDetail({ service }: { service: Service }) {
+  const t = await getTranslations("Service");
+  const tp = await getTranslations("Process");
+  const th = await getTranslations("Home");
+  const tc = await getTranslations("Common");
+  const tcs = await getTranslations("CaseStudy");
   const study = getCaseStudy(service.caseStudySlug);
+  const slug = service.slug;
 
   return (
     <>
       <PageHero
-        eyebrow={service.eyebrow}
-        title={service.heroTitle}
-        description={service.description}
+        eyebrow={t(`${slug}.eyebrow`)}
+        title={t(`${slug}.heroTitle`)}
+        description={t(`${slug}.description`)}
         image={service.image}
-        imageAlt={service.imageAlt}
+        imageAlt={t(`${slug}.imageAlt`)}
       />
 
-      <Section title="The problem" description={service.problem} />
+      <Section description={t(`${slug}.problem`)} />
 
-      <Section
-        title="Capabilities"
-        description="What we design, build, and take into production—explained in business terms."
-      >
+      <Section title={th("servicesTitle")}>
         <div className="grid gap-4 sm:grid-cols-2">
           {service.detailedCapabilities.map((item, index) => (
             <Reveal key={item.title} delay={index * 0.04}>
@@ -47,7 +59,7 @@ export function ServiceDetail({ service }: { service: Service }) {
         </div>
       </Section>
 
-      <Section title="Technology" className="bg-panel">
+      <Section title={th("technologyTitle")} className="bg-panel">
         <div className="flex flex-wrap gap-2">
           {service.technologies.map((item) => (
             <Badge key={item}>{item}</Badge>
@@ -55,7 +67,7 @@ export function ServiceDetail({ service }: { service: Service }) {
         </div>
       </Section>
 
-      <Section title="Use cases">
+      <Section title={th("solutionsTitle")}>
         <div className="grid gap-4 md:grid-cols-3">
           {service.useCases.map((item) => (
             <Card key={item.title} className="p-6">
@@ -71,28 +83,24 @@ export function ServiceDetail({ service }: { service: Service }) {
       </Section>
 
       {service.slug === "fintech" ? (
-        <Section
-          size="md"
-          title="What this looks like"
-          description="Representative product surfaces—not client work. They show the kind of financial interfaces we design and engineer."
-        >
+        <Section size="md" title={th("technologyTitle")}>
           <FintechMocks />
         </Section>
       ) : null}
 
-      <Section title="How we work" className="bg-panel">
+      <Section title={th("processTitle")} className="bg-panel">
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {processSteps.map((step) => (
+          {processKeys.map((step) => (
             <li
               key={step.number}
               className="flex h-full flex-col rounded-2xl border border-border bg-card p-5"
             >
               <p className="font-mono text-xs text-accent">{step.number}</p>
               <h3 className="mt-2 font-semibold tracking-[-0.03em] uppercase">
-                {step.title}
+                {tp(step.title)}
               </h3>
               <p className="mt-2 text-sm leading-6 text-muted">
-                {step.description}
+                {tp(step.desc)}
               </p>
             </li>
           ))}
@@ -100,7 +108,7 @@ export function ServiceDetail({ service }: { service: Service }) {
       </Section>
 
       {study ? (
-        <Section size="md" title="Related case study">
+        <Section size="md" title={th("caseStudiesTitle")}>
           <Card className="overflow-hidden">
             <div className="grid lg:grid-cols-2">
               <CoverImage
@@ -112,13 +120,13 @@ export function ServiceDetail({ service }: { service: Service }) {
               <div className="flex flex-col justify-center p-6 sm:p-8">
                 <Badge>{study.sector}</Badge>
                 <h3 className="mt-4 text-xl font-semibold tracking-[-0.03em] sm:text-2xl">
-                  {study.title}
+                  {tcs(`${study.slug}.title`)}
                 </h3>
                 <p className="mt-3 max-w-2xl text-[15px] leading-7 text-muted">
-                  {study.summary}
+                  {tcs(`${study.slug}.summary`)}
                 </p>
                 <TextLink href={`/case-studies/${study.slug}`} className="mt-6">
-                  Read case study
+                  {tc("learnMore")}
                 </TextLink>
               </div>
             </div>
@@ -128,7 +136,7 @@ export function ServiceDetail({ service }: { service: Service }) {
 
       <div className="pb-8 text-center">
         <Button href="/contact" size="lg">
-          Start a Project
+          {tc("startProject")}
         </Button>
       </div>
 

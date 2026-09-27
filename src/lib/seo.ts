@@ -1,24 +1,38 @@
 import type { Metadata } from "next";
 import { site } from "@/lib/site";
 import { absoluteUrl } from "@/lib/utils";
+import { localeOgTags, locales, type AppLocale } from "@/i18n/routing";
 
 type CreateMetadataInput = {
   title: string;
   description: string;
   path?: string;
+  locale?: string;
   keywords?: string[];
 };
 
-export function createMetadata({
+function localizedPath(locale: string, path = "/") {
+  const clean = path.startsWith("/") ? path : `/${path}`;
+  if (clean === "/") return `/${locale}`;
+  return `/${locale}${clean}`;
+}
+
+export function createLocalizedMetadata({
   title,
   description,
   path = "/",
+  locale = "en",
   keywords = [],
 }: CreateMetadataInput): Metadata {
-  const url = absoluteUrl(path);
+  const localePath = localizedPath(locale, path);
+  const url = absoluteUrl(localePath);
   const fullTitle = title.includes(site.name)
     ? title
     : `${title} | ${site.name}`;
+
+  const languages = Object.fromEntries(
+    locales.map((code) => [code, absoluteUrl(localizedPath(code, path))]),
+  );
 
   return {
     title: fullTitle,
@@ -34,6 +48,10 @@ export function createMetadata({
     ],
     alternates: {
       canonical: url,
+      languages: {
+        ...languages,
+        "x-default": absoluteUrl(localizedPath("en", path)),
+      },
     },
     openGraph: {
       type: "website",
@@ -41,7 +59,7 @@ export function createMetadata({
       title: fullTitle,
       description,
       siteName: site.name,
-      locale: "en_US",
+      locale: localeOgTags[(locale as AppLocale) in localeOgTags ? (locale as AppLocale) : "en"],
     },
     twitter: {
       card: "summary_large_image",
@@ -49,6 +67,11 @@ export function createMetadata({
       description,
     },
   };
+}
+
+/** @deprecated Prefer createLocalizedMetadata */
+export function createMetadata(input: CreateMetadataInput): Metadata {
+  return createLocalizedMetadata(input);
 }
 
 export function organizationJsonLd() {
@@ -84,6 +107,7 @@ export function websiteJsonLd() {
     name: site.name,
     url: site.url,
     description: site.description,
+    inLanguage: [...locales],
     publisher: {
       "@type": "Organization",
       name: site.name,

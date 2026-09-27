@@ -1,4 +1,4 @@
-import { aboutPrinciples } from "@/lib/data/why-us";
+import { getTranslations } from "next-intl/server";
 import { site } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
@@ -6,12 +6,22 @@ import { Section } from "@/components/ui/Section";
 import { CoverImage } from "@/components/visual/CoverImage";
 import { MissionVision } from "@/components/pages/MissionVision";
 
-export function AboutPreview() {
+const principleKeys = [
+  { title: "productStrategy", desc: "productStrategyDesc" },
+  { title: "uxUi", desc: "uxUiDesc" },
+  { title: "software", desc: "softwareDesc" },
+  { title: "ai", desc: "aiDesc" },
+  { title: "blockchain", desc: "blockchainDesc" },
+  { title: "cloud", desc: "cloudDesc" },
+  { title: "data", desc: "dataDesc" },
+] as const;
+
+export async function AboutPreview() {
+  const t = await getTranslations("Home");
+  const tp = await getTranslations("Principles");
+
   return (
-    <Section
-      title="Building software for the next generation of businesses"
-      description="We are a technology company focused on building sophisticated software products across AI, blockchain, and financial technology."
-    >
+    <Section title={t("aboutTitle")} description={t("aboutDesc")}>
       <div className="mb-10">
         <MissionVision compact />
       </div>
@@ -19,35 +29,29 @@ export function AboutPreview() {
         <Reveal>
           <CoverImage
             src="/images/about-workspace.png"
-            alt="Quiet studio workspace with daylight and a closed laptop"
+            alt=""
             className="mb-8 aspect-[4/3] rounded-3xl border border-border"
             sizes="(min-width: 1024px) 40vw, 100vw"
           />
-          <p className="text-base leading-8 text-muted">
-            Our approach combines product strategy, UX/UI, software engineering,
-            AI, blockchain, cloud infrastructure, and data engineering. We work
-            with ambitious companies from early-stage startups to established
-            businesses.
-          </p>
+          <p className="text-base leading-8 text-muted">{t("aboutBody1")}</p>
           <p className="mt-5 text-base leading-8 text-muted">
-            {site.name} is built to be trusted with complex, high-stakes
-            products—not to supply interchangeable developer hours.
+            {t("aboutBody2", { name: site.name })}
           </p>
           <div className="mt-8">
             <Button href="/about" variant="secondary">
-              About {site.name}
+              {t("aboutCta", { name: site.name })}
             </Button>
           </div>
         </Reveal>
         <div className="grid items-stretch gap-3 sm:grid-cols-2">
-          {aboutPrinciples.map((item, index) => (
+          {principleKeys.map((item, index) => (
             <Reveal key={item.title} delay={index * 0.04} className="h-full min-w-0">
               <div className="flex h-full flex-col rounded-2xl border border-border bg-card p-4">
                 <h3 className="text-sm font-semibold tracking-[-0.02em]">
-                  {item.title}
+                  {tp(item.title)}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-muted">
-                  {item.description}
+                  {tp(item.desc)}
                 </p>
               </div>
             </Reveal>

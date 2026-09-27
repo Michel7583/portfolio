@@ -1,24 +1,16 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { MessageCircle, Send, X } from "lucide-react";
 import { site } from "@/lib/site";
 import type { ChatMessage } from "@/lib/chat";
 import { BrandMark } from "@/components/layout/BrandMark";
 import { cn } from "@/lib/utils";
 
-const suggestions = [
-  "What does Veylora build?",
-  "How do you approach a new product?",
-  "How do we start a project?",
-];
-
-const opening: ChatMessage = {
-  role: "assistant",
-  content: `I can help you understand ${site.name}'s work across AI, blockchain, and fintech—or point you to the right page. What are you building?`,
-};
-
 export function ChatWidget() {
+  const t = useTranslations("Chat");
+  const locale = useLocale();
   const panelId = useId();
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -26,7 +18,25 @@ export function ChatWidget() {
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const opening = useMemo<ChatMessage>(
+    () => ({
+      role: "assistant",
+      content: t("opening", { name: site.name }),
+    }),
+    [t],
+  );
+
+  const suggestions = useMemo(
+    () => [t("suggestion1"), t("suggestion2"), t("suggestion3")],
+    [t],
+  );
+
   const [messages, setMessages] = useState<ChatMessage[]>([opening]);
+
+  useEffect(() => {
+    setMessages([opening]);
+  }, [opening]);
 
   useEffect(() => {
     if (!open) return;
@@ -62,18 +72,19 @@ export function ChatWidget() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: nextMessages.filter((item) => item !== opening),
+          locale,
+          messages: nextMessages.filter((item) => item.content !== opening.content || item.role !== "assistant"),
         }),
       });
       const data = (await response.json()) as { ok?: boolean; reply?: string; error?: string };
 
       if (!response.ok || !data.ok || !data.reply) {
-        throw new Error(data.error ?? "The assistant could not reply.");
+        throw new Error(data.error ?? t("error"));
       }
 
       setMessages((current) => [...current, { role: "assistant", content: data.reply! }]);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "The assistant could not reply.");
+      setError(caught instanceof Error ? caught.message : t("error"));
     } finally {
       setPending(false);
     }
@@ -84,7 +95,7 @@ export function ChatWidget() {
       {open ? (
         <section
           id={panelId}
-          aria-label={`${site.name} assistant`}
+          aria-label={t("title", { name: site.name })}
           className="pointer-events-auto mb-3 flex h-[min(32rem,calc(100dvh-7.5rem))] w-[min(24rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-3xl border border-border bg-overlay shadow-[var(--shadow)] backdrop-blur-xl"
         >
           <header className="flex items-center gap-3 border-b border-border px-4 py-3">
@@ -92,14 +103,16 @@ export function ChatWidget() {
               <BrandMark className="h-5 w-5" />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold tracking-[-0.02em]">{site.name} Assistant</p>
-              <p className="text-xs text-muted">Ask about services, process, or next steps</p>
+              <p className="text-sm font-semibold tracking-[-0.02em]">
+                {t("title", { name: site.name })}
+              </p>
+              <p className="text-xs text-muted">{t("subtitle")}</p>
             </div>
             <button
               type="button"
               onClick={() => setOpen(false)}
               className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-foreground hover:bg-card-hover"
-              aria-label="Close chat"
+              aria-label={t("close")}
             >
               <X className="h-4 w-4" aria-hidden />
             </button>
@@ -121,7 +134,7 @@ export function ChatWidget() {
             ))}
             {pending ? (
               <p className="max-w-[90%] rounded-2xl bg-card px-3.5 py-2.5 text-sm text-muted">
-                Thinking…
+                {t("thinking")}
               </p>
             ) : null}
             {error ? <p className="text-xs leading-5 text-red-400">{error}</p> : null}
@@ -149,7 +162,7 @@ export function ChatWidget() {
             }}
           >
             <label className="sr-only" htmlFor="chat-input">
-              Message
+              {t("placeholder")}
             </label>
             <div className="flex items-end gap-2 rounded-2xl border border-border bg-card px-3 py-2">
               <textarea
@@ -164,14 +177,14 @@ export function ChatWidget() {
                     void send(draft);
                   }
                 }}
-                placeholder="Ask about a product or engagement…"
+                placeholder={t("placeholder")}
                 className="max-h-28 min-h-8 flex-1 resize-none bg-transparent text-sm leading-6 text-foreground outline-none placeholder:text-muted"
               />
               <button
                 type="submit"
                 disabled={pending || !draft.trim()}
                 className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-strong text-inverse disabled:opacity-40"
-                aria-label="Send message"
+                aria-label={t("send")}
               >
                 <Send className="h-3.5 w-3.5" aria-hidden />
               </button>
@@ -188,7 +201,7 @@ export function ChatWidget() {
         onClick={() => setOpen((value) => !value)}
       >
         {open ? <X className="h-4 w-4" aria-hidden /> : <MessageCircle className="h-4 w-4" aria-hidden />}
-        {open ? "Close" : "Chat"}
+        {open ? t("close") : t("open")}
       </button>
     </div>
   );

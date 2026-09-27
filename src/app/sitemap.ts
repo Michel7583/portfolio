@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { caseStudies } from "@/lib/data/case-studies";
+import { locales } from "@/i18n/routing";
 import { site } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -16,10 +17,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...caseStudies.map((study) => `/case-studies/${study.slug}`),
   ];
 
-  return routes.map((path) => ({
-    url: `${site.url}${path}`,
-    lastModified: new Date(),
-    changeFrequency: path === "" ? "weekly" : "monthly",
-    priority: path === "" ? 1 : 0.7,
-  }));
+  return locales.flatMap((locale) =>
+    routes.map((path) => ({
+      url: `${site.url}/${locale}${path}`,
+      lastModified: new Date(),
+      changeFrequency: path === "" ? "weekly" : "monthly",
+      priority: path === "" ? 1 : 0.7,
+    })),
+  );
 }
