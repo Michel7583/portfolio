@@ -94,7 +94,6 @@ export function organizationJsonLd() {
     sameAs: [
       site.social.linkedin,
       site.social.github,
-      site.social.x,
       site.social.telegram,
     ],
   };

@@ -136,20 +136,6 @@ export async function Footer() {
                   </li>
                   <li>
                     <a
-                      href={site.social.x}
-                      className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-foreground"
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      <SocialIcon
-                        className="h-4 w-4"
-                        path="M14.72 10.39 21.2 3h-1.54l-5.62 6.42L9.55 3H3.2l6.8 9.73L3.2 21h1.54l5.94-6.79L14.4 21h6.35l-6.03-10.61Zm-2.1 2.4-.69-.97-5.48-7.7h2.36l4.42 6.21.69.97 5.75 8.08h-2.36l-4.69-6.59Z"
-                      />
-                      X
-                    </a>
-                  </li>
-                  <li>
-                    <a
                       href={site.social.github}
                       className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-foreground"
                       rel="noreferrer"

@@ -27,7 +27,6 @@ export const site = {
   social: {
     linkedin: "https://www.linkedin.com/company/veylora-network",
     github: "https://github.com/veylora-org",
-    x: "https://x.com/VeyloraNetwork",
     telegram: "https://t.me/Veylora_official",
   },
 } as const;
