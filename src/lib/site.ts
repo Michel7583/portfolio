@@ -26,7 +26,6 @@ export const site = {
   logo: "/icon.svg",
   social: {
     linkedin: "https://www.linkedin.com/company/veylora-network",
-    github: "https://github.com/veylora-org",
     telegram: "https://t.me/Veylora_official",
   },
 } as const;

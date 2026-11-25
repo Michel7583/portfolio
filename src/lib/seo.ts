@@ -91,11 +91,7 @@ export function organizationJsonLd() {
       "Blockchain and Web3 Development",
       "Fintech Software Development",
     ],
-    sameAs: [
-      site.social.linkedin,
-      site.social.github,
-      site.social.telegram,
-    ],
+    sameAs: [site.social.linkedin, site.social.telegram],
   };
 }
 
